@@ -30,16 +30,6 @@ class File extends ActiveRecord
     {
         return Yii::$app->getModule('attachments')->tableName;
     }
-    
-    /**
-     * @inheritDoc
-     */
-    public function fields()
-    {
-        return [
-            'url'
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -47,7 +37,7 @@ class File extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'model', 'itemId', 'hash', 'size', 'mime'], 'required'],
+            [['name', 'model', 'itemId', 'hash', 'size', 'type', 'mime'], 'required'],
             [['itemId', 'size'], 'integer'],
             [['name', 'model', 'hash', 'type', 'mime'], 'string', 'max' => 255]
         ];
@@ -72,7 +62,7 @@ class File extends ActiveRecord
 
     public function getUrl()
     {
-        return Url::to(['/attachments/file/download', 'id' => $this->id]);
+        return Url::to(['/attachments/file/download', 'id' => $this->id, 'hash'=>$this->hash]);
     }
 
     public function getPath()

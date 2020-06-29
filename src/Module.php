@@ -124,7 +124,9 @@ class Module extends \yii\base\Module
             throw new Exception("File $filePath not exists");
         }
 
-        $fileHash = md5(microtime(true) . $filePath);
+		
+        //$fileHash = md5(microtime(true) . $filePath);
+        $fileHash = md5($filePath);
         $fileType = pathinfo($filePath, PATHINFO_EXTENSION);
         $newFileName = "$fileHash.$fileType";
         $fileDirPath = $this->getFilesDirPath($fileHash);
@@ -151,11 +153,25 @@ class Module extends \yii\base\Module
         }
     }
 
-    public function detachFile($id)
+    public function detachFile($id, $hash)
     {
         /** @var File $file */
-        $file = File::findOne(['id' => $id]);
-        if (empty($file)) return false;
+        //$file = File::findOne(['id' => $id]);
+
+        $file = File::find()->where(['id' => $id])->where(['hash'=>$hash])->one();
+        
+        if (empty($file))
+            return false;
+        
+        $class = "\\app\\models\\" . $file->model;
+        $owner = $class::findOne($file->itemId);
+        
+        file_put_contents('log_file_new.txt', $owner->description . "\n" . ($owner->attachmentsAreDeletable ? 'del' : 'no'));
+        
+        if ( ! $owner->attachmentsAreDeletable ) {
+            return false;
+        }
+        
         $filePath = $this->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
         
         // this is the important part of the override.

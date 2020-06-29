@@ -113,7 +113,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         UploadedFile::reset();
 
         foreach ($types as $index => $type) {
-            $file = $type ? "file.$type" : "file";
+            $file = "file.$type";
             $path = Yii::getAlias("@tests/files/$file");
             $_FILES["UploadForm[file][$index]"] = [
                 'name' => $file,
@@ -128,8 +128,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function checkFilesExist($types)
     {
         foreach ($types as $type) {
-            $file = $type ? "/file.$type" : "/file";
-            $filePath = $this->getTempDirPath() . $file;
+            $filePath = $this->getTempDirPath() . "/file.$type";
             $this->assertFileExists($filePath);
         }
     }
@@ -137,8 +136,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function checkFilesNotExist($types)
     {
         foreach ($types as $type) {
-            $file = $type ? "/file.$type" : "/file";
-            $filePath = $this->getTempDirPath() . $file;
+            $filePath = $this->getTempDirPath() . "/file.$type";
             $this->assertFileNotExists($filePath);
         }
     }

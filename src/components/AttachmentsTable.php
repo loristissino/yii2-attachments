@@ -25,10 +25,10 @@ class AttachmentsTable extends Widget
 
     /** @var ActiveRecord */
     public $model;
+    
+    public $showDeleteButton;
 
     public $tableOptions = ['class' => 'table table-striped table-bordered table-condensed'];
-
-    public $showDeleteButton = true;
 
     public function init()
     {
@@ -71,39 +71,47 @@ class AttachmentsTable extends Widget
 JS;
         Yii::$app->view->registerJs($js);
 
-        return GridView::widget([
-            'dataProvider' => new ArrayDataProvider(['allModels' => $this->model->getFiles()]),
-            'layout' => '{items}',
-            'tableOptions' => $this->tableOptions,
-            'columns' => [
-                [
-                    'class' => 'yii\grid\SerialColumn'
-                ],
-                [
-                    'label' => $this->getModule()->t('attachments', 'File name'),
-                    'format' => 'raw',
-                    'value' => function ($model) {
-                        return Html::a("$model->name.$model->type", $model->getUrl());
-                    }
-                ],
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{delete}',
-                    'visibleButtons' => ['delete' => $this->showDeleteButton],
-                    'buttons' => [
-                        'delete' => function ($url, $model, $key) {
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>',
-                                '#',
-                                [
-                                    'class' => 'delete-button',
-                                    'title' => Yii::t('yii', 'Delete'),
-                                    'data-url' => Url::to(['/attachments/file/delete', 'id' => $model->id])
-                                ]
-                            );
+        $dataProvider = new ArrayDataProvider(['allModels' => $this->model->getFiles()]);
+        
+        if ($dataProvider->getTotalCount()>0) {
+            return GridView::widget([
+                'dataProvider' => $dataProvider,
+                'layout' => '{items}',
+                'tableOptions' => $this->tableOptions,
+                'columns' => [
+                    [
+                        'class' => 'yii\grid\SerialColumn'
+                    ],
+                    [
+                        'label' => $this->getModule()->t('attachments', 'File name'),
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            return Html::a("$model->name.$model->type", $model->getUrl(), ['target'=>'_blank']);
                         }
-                    ]
-                ],
-            ]
-        ]);
+                    ],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{delete}',
+                        'buttons' => [
+                            'delete' => function ($url, $model, $key) {
+                                return $this->showDeleteButton ? Html::a('<span class="glyphicon glyphicon-trash"></span>',
+                                    '#',
+                                    [
+                                        'class' => 'delete-button',
+                                        'title' => Yii::t('yii', 'Delete'),
+                                        'data-url' => Url::to(['/attachments/file/delete', 'id' => $model->id, 'hash'=>$model->hash])
+                                    ]
+                                ) : null;
+                            }
+                        ]
+                    ],
+                ]
+            ]);
+        
+        }
+        else {
+            return Html::tag('p', Yii::t('yii', 'No items.'));
+        }
+
     }
 }

@@ -10,6 +10,7 @@ use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use yii\web\NotFoundHttpException;
 
 class FileController extends Controller
 {
@@ -47,17 +48,23 @@ class FileController extends Controller
         }
     }
 
-    public function actionDownload($id)
+    public function actionDownload($id, $hash)
     {
-        $file = File::findOne(['id' => $id]);
+        $file = File::find()->where(['id' => $id])->where(['hash'=>$hash])->one();
+        
+        if (!$file)
+        {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        
         $filePath = $this->getModule()->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
 
-        return Yii::$app->response->sendFile($filePath, "$file->name.$file->type");
+        return Yii::$app->response->sendFile($filePath, "$file->name.$file->type", ['inline'=>true]);
     }
 
-    public function actionDelete($id)
+    public function actionDelete($id, $hash)
     {
-        if ($this->getModule()->detachFile($id)) {
+        if ($this->getModule()->detachFile($id, $hash)) {
             return true;
         } else {
             return false;

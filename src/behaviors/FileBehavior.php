@@ -15,7 +15,8 @@ use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\UploadedFile;
+//use yii\web\UploadedFile;
+use \app\components\EnhancedUploadedFile;
 
 class FileBehavior extends Behavior
 {
@@ -31,13 +32,14 @@ class FileBehavior extends Behavior
     }
 
     public function saveUploads($event)
-    {
-        $files = UploadedFile::getInstancesByName('UploadForm[file]');
+    {   
+        $files = \app\components\EnhancedUploadedFile::getInstancesByName('UploadForm[file]');
 
         if (!empty($files)) {
             foreach ($files as $file) {
-                if (!$file->saveAs($this->getModule()->getUserDirPath() . $file->name)) {
-                    throw new \Exception(\Yii::t('yii', 'File upload failed.'));
+                $saved = $file->saveAs($this->getModule()->getUserDirPath() . $file->name);
+                if (!$saved) {
+                    throw new \Exception(\Yii::t('yii', 'File upload failed.' . ' ' . $this->getModule()->getUserDirPath() . $file->name));
                 }
             }
         }
@@ -54,7 +56,7 @@ class FileBehavior extends Behavior
     public function deleteUploads($event)
     {
         foreach ($this->getFiles() as $file) {
-            $this->getModule()->detachFile($file->id);
+            $this->getModule()->detachFile($file->id, $file->hash);
         }
     }
 

@@ -28,8 +28,6 @@ class AttachmentsTableWithPreview extends Widget
 
     public $tableOptions = ['class' => 'table table-striped table-bordered table-condensed'];
 
-    public $showDeleteButton = true;
-
     public function init()
     {
         parent::init();
@@ -107,7 +105,6 @@ JS;
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'template' => '{delete}',
-                    'visibleButtons' => ['delete' => $this->showDeleteButton],
                     'buttons' => [
                         'delete' => function ($url, $model, $key) {
                             return Html::a('<span class="glyphicon glyphicon-trash"></span>',
