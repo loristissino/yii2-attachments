@@ -1,5 +1,5 @@
 {
-  "name": "nemmo/yii2-attachments",
+  "name": "loristissino/yii2-attachments",
   "description": "Extension for file uploading and attaching to the models",
   "type": "yii2-extension",
   "keywords": [
@@ -10,12 +10,18 @@
     "upload"
   ],
   "license": "BSD-4-Clause",
-  "homepage": "https://github.com/Nemmo/yii2-attachments",
+  "homepage": "https://github.com/loristissino/yii2-attachments",
   "authors": [
     {
       "name": "Alimzhan Abuov aka Nemmo",
       "email": "alimzhan.abu@yandex.kz",
       "homepage": "http://alimzhan.kz",
+      "role": "Developer"
+    },
+    {
+      "name": "Loris Tissino",
+      "email": "loris.tissino@gmail.com",
+      "homepage": "http://loris.tissino.it",
       "role": "Developer"
     }
   ],
