@@ -26,7 +26,7 @@ To use this extension, just add
 
 in your project's composer.json file.
 
-Since in this fork's composer.json file contains 
+Since this fork's composer.json file contains 
 
     "autoload": {
       "psr-4": {
