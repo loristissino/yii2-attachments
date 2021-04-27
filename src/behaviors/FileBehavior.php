@@ -34,7 +34,6 @@ class FileBehavior extends Behavior
     public function saveUploads($event)
     {   
         $files = \app\components\EnhancedUploadedFile::getInstancesByName('UploadForm[file]');
-
         if (!empty($files)) {
             foreach ($files as $file) {
                 $saved = $file->saveAs($this->getModule()->getUserDirPath() . $file->name);

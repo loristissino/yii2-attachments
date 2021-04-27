@@ -62,9 +62,12 @@ class FileController extends Controller
         return Yii::$app->response->sendFile($filePath, "$file->name.$file->type", ['inline'=>true]);
     }
 
-    public function actionDelete($id, $hash)
+    public function actionDelete($id, $hash, $returnUrl='')
     {
         if ($this->getModule()->detachFile($id, $hash)) {
+            if ($returnUrl) {
+                return $this->redirect($returnUrl);
+            }
             return true;
         } else {
             return false;

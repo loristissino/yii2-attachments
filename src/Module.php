@@ -166,8 +166,6 @@ class Module extends \yii\base\Module
         $class = "\\app\\models\\" . $file->model;
         $owner = $class::findOne($file->itemId);
         
-        file_put_contents('log_file_new.txt', $owner->description . "\n" . ($owner->attachmentsAreDeletable ? 'del' : 'no'));
-        
         if ( ! $owner->attachmentsAreDeletable ) {
             return false;
         }
