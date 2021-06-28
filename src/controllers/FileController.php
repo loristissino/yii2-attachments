@@ -56,6 +56,11 @@ class FileController extends Controller
         {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
+
+        if ($file->itemId < 0 /* soft deletion */ and !$file->downloadableBy(Yii::$app->user))
+        {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist anymore.'));
+        }
         
         $filePath = $this->getModule()->getFilesDirPath($file->hash) . DIRECTORY_SEPARATOR . $file->hash . '.' . $file->type;
 
